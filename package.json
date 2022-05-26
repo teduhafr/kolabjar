@@ -1,0 +1,16 @@
+{
+    "name": "kolabjar_pupetter",
+    "version": "0.0.1",
+    "description": "untuk mengecek absensi dan lainnya biar automatis",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "cekabsen": "node index.js"
+    },
+    "author": "",
+    "license": "MIT",
+    "dependencies": {
+        "cli-progress": "^3.11.1",
+        "puppeteer": "^14.1.1"
+    }
+}
