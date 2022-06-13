@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 const dataPeserta = require("./datapeserta.json");
 const dataHasilAbsen = [];
+const dataHasilAbsen1 = [];
 const fs = require('fs');
 const cliProgress = require('cli-progress');
 
@@ -20,7 +21,7 @@ const cliProgress = require('cli-progress');
     ]);
     const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
     bar1.start(dataPeserta.length, 0);
-    for (let index = 0; index < dataPeserta.length; ++index) {
+    for (let index = 0; index < dataPeserta.length / 2; ++index) {
         let url = dataPeserta[index].URL;
         let nama = dataPeserta[index].nama;
         await page.goto(url, { waitUntil: 'networkidle0' });
@@ -38,10 +39,37 @@ const cliProgress = require('cli-progress');
         const progres = index + 1;
         bar1.update(progres);
     }
-
+    for (let index = dataPeserta.length / 2; index < dataPeserta.length; ++index) {
+        let url = dataPeserta[index].URL;
+        let nama = dataPeserta[index].nama;
+        await page.goto(url, { waitUntil: 'networkidle0' });
+        const data = await page.evaluate(
+            () => Array.from(
+                document.querySelectorAll('div[class="custom-scrollbar table-wrapper-scroll-y"] > table > tbody > tr'),
+                row => Array.from(row.querySelectorAll('th, td'), cell => cell.innerText)
+            )
+        );
+        const dataDariTabel = {
+            nama: nama,
+            absen: data
+        }
+        dataHasilAbsen1.push(dataDariTabel);
+        const progres = index + 1;
+        bar1.update(progres);
+    }
     //await page.screenshot({ path: "kolabjar.png" });
     const content = JSON.stringify(dataHasilAbsen);
+    const content1 = JSON.stringify(dataHasilAbsen1);
     fs.writeFile('./cekabsen.txt', content, err => {
+        if (err) {
+            console.error(err)
+            return
+        } else {
+            bar1.stop();
+        }
+
+    });
+    fs.writeFile('./cekabsen1.txt', content1, err => {
         if (err) {
             console.error(err)
             return
