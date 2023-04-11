@@ -6,6 +6,7 @@ const dataHasilAbsen2 = [];
 const fs = require('fs');
 const cliProgress = require('cli-progress');
 
+exports.getabsen = (req, res) => {
 (async() => {
     const browser = await puppeteer.launch({
         headless: true,
@@ -41,19 +42,15 @@ const cliProgress = require('cli-progress');
         bar1.update(progres);
         if((index + 1) == dataPeserta.length) {
             bar1.stop();
+            const content = JSON.stringify(dataHasilAbsen);
+            res.send({
+                status: 'sukses',
+                data: content
+            });
         }
     }
 
     //await page.screenshot({ path: "kolabjar.png" });
-    const content = JSON.stringify(dataHasilAbsen);
-    fs.writeFile('./absen.json', content, err => {
-        if (err) {
-            console.error(err)
-            return
-        } else {
-            // do nothing
-        }
-
-    });
     await browser.close();
 })();
+}
