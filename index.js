@@ -22,7 +22,7 @@ const cliProgress = require('cli-progress');
     ]);
     const bar1 = new cliProgress.SingleBar({}, cliProgress.Presets.shades_classic);
     bar1.start(dataPeserta.length, 0);
-    for (let index = 0; index < 15; ++index) {
+    for (let index = 0; index < dataPeserta.length; ++index) {
         let url = dataPeserta[index].URL;
         let nama = dataPeserta[index].nama;
         await page.goto(url, { waitUntil: 'networkidle0' });
@@ -39,71 +39,19 @@ const cliProgress = require('cli-progress');
         dataHasilAbsen.push(dataDariTabel);
         const progres = index + 1;
         bar1.update(progres);
-    }
-    for (let index = 15; index < 30; ++index) {
-        let url = dataPeserta[index].URL;
-        let nama = dataPeserta[index].nama;
-        await page.goto(url, { waitUntil: 'networkidle0' });
-        const data = await page.evaluate(
-            () => Array.from(
-                document.querySelectorAll('div[class="custom-scrollbar table-wrapper-scroll-y"] > table > tbody > tr'),
-                row => Array.from(row.querySelectorAll('th, td'), cell => cell.innerText)
-            )
-        );
-        const dataDariTabel = {
-            nama: nama,
-            absen: data
+        if((index + 1) == dataPeserta.length) {
+            bar1.stop();
         }
-        dataHasilAbsen1.push(dataDariTabel);
-        const progres = index + 1;
-        bar1.update(progres);
     }
-    for (let index = 30; index < dataPeserta.length; ++index) {
-        let url = dataPeserta[index].URL;
-        let nama = dataPeserta[index].nama;
-        await page.goto(url, { waitUntil: 'networkidle0' });
-        const data = await page.evaluate(
-            () => Array.from(
-                document.querySelectorAll('div[class="custom-scrollbar table-wrapper-scroll-y"] > table > tbody > tr'),
-                row => Array.from(row.querySelectorAll('th, td'), cell => cell.innerText)
-            )
-        );
-        const dataDariTabel = {
-            nama: nama,
-            absen: data
-        }
-        dataHasilAbsen2.push(dataDariTabel);
-        const progres = index + 1;
-        bar1.update(progres);
-    }
+
     //await page.screenshot({ path: "kolabjar.png" });
     const content = JSON.stringify(dataHasilAbsen);
-    const content1 = JSON.stringify(dataHasilAbsen1);
-    const content2 = JSON.stringify(dataHasilAbsen2);
-    fs.writeFile('./cekabsen.txt', content, err => {
+    fs.writeFile('./absen.json', content, err => {
         if (err) {
             console.error(err)
             return
         } else {
             // do nothing
-        }
-
-    });
-    fs.writeFile('./cekabsen1.txt', content1, err => {
-        if (err) {
-            console.error(err)
-            return
-        } else {
-            // do nothing
-        }
-
-    });
-    fs.writeFile('./cekabsen2.txt', content2, err => {
-        if (err) {
-            console.error(err)
-            return
-        } else {
-            bar1.stop();
         }
 
     });
