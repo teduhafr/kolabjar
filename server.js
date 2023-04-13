@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const absen = require('./index');
+const absen2 = require('./latihan');
 require('dotenv').config();
 
 global.__basedir = __dirname;
@@ -19,7 +20,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/dataabsen", absen.getabsen);
-
+app.post("/dataabsen1", absen2.getabsen);
 
 
 //require('./src/routes/auth.routes.js')(app);
