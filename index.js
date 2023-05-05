@@ -1,8 +1,6 @@
 const puppeteer = require("puppeteer");
 const dataPeserta = require("./datapeserta.json");
-const dataHasilAbsen = [];
-const dataHasilAbsen1 = [];
-const dataHasilAbsen2 = [];
+const dataHasilAbsenX = [];
 const fs = require('fs');
 const cliProgress = require('cli-progress');
 
@@ -41,16 +39,16 @@ exports.getabsen = (req, res) => {
                 row => Array.from(row.querySelectorAll('th, td'), cell => cell.innerText)
             )
         );
-        const dataDariTabel = {
+        const dataDariTabelX = {
             nama: nama,
             absen: data
         }
-        dataHasilAbsen.push(dataDariTabel);
+        dataHasilAbsenX.push(dataDariTabelX);
         const progres = index + 1;
         bar1.update(progres);
         if((index + 1) == dataPeserta.length) {
             bar1.stop();
-            const content = dataHasilAbsen;
+            const content = dataHasilAbsenX
             res.send({
                 status: 'sukses',
                 data: content

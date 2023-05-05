@@ -1,5 +1,5 @@
 const puppeteer = require("puppeteer");
-const dataHasilAbsen = [];
+var dataHasilAbsen = [];
 const fs = require('fs');
 const cliProgress = require('cli-progress');
 exports.getabsen = (req, res) => {
@@ -72,5 +72,7 @@ exports.getabsen = (req, res) => {
     
     await page.screenshot({ path: "kolabjar.png" });
     await browser.close();
+    dataHasilAbsen = [];
+    dataDariTabel = [];
 })();
 }
